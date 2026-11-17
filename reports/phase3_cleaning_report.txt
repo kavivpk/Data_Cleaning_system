@@ -1,0 +1,99 @@
+================================================================================
+                     DATA CLEANING REPORT - PHASE 3
+                Project: Data Cleaning and Preprocessing
+================================================================================
+
+1. ROW SUMMARY
+   - Original Number of Rows: 10
+   - Final Number of Rows:    9
+   - Duplicate Rows Removed:  1
+
+2. DUPLICATE RECORDS ANALYSIS
+   - Exact Duplicate Rows Detected Before Cleaning:  1
+   - Duplicate Order_IDs Detected Before Cleaning:    1
+   - Business Key Used for Deduplication:            Order_ID
+   - Deduplication Rule:                             Keep first valid record, drop subsequent duplicates.
+   - Exact Duplicates Remaining After Cleaning:      0
+   - Duplicate Order_IDs Remaining After Cleaning:    0
+
+3. MISSING VALUE HANDLING
+   Columns and Missing Counts:
+   - Order_ID       : Before = 0 | After = 0
+   - Customer_Name  : Before = 1 | After = 0
+   - Email          : Before = 1 | After = 1
+   - Product        : Before = 0 | After = 0
+   - Quantity       : Before = 0 | After = 0
+   - Price          : Before = 1 | After = 0
+   - City           : Before = 1 | After = 0
+   - Order_Date     : Before = 0 | After = 0
+
+   Business Rules & Rationales for Missing Value Strategies:
+   a) Customer_Name:
+      - Strategy: Imputed with 'Unknown'.
+      - Rationale: The transaction represents valid commercial activity with financial
+        value. Dropping records with missing names causes revenue underreporting.
+        Marking as 'Unknown' preserves transactional data for aggregate reporting.
+   b) Email:
+      - Strategy: Preserved as missing (NaN); reported without synthetic replacement.
+      - Rationale: Creating synthetic/fake emails (e.g. unknown@domain.com) corrupts marketing
+        databases, distorts customer analytics, and induces email bounce penalties.
+   c) Price:
+      - Strategy: Imputed using median price of the matching product category.
+      - Rationale: Product prices are typically consistent within categories. Median is robust
+        against extreme pricing outliers and reconstructs financial metrics accurately.
+   d) City:
+      - Strategy: Imputed with 'Unknown'.
+      - Rationale: Retains the order in financial and item totals without distorting
+        regional performance benchmarks.
+
+4. PRICE IMPUTATION DETAILS
+   - Number of Price Values Imputed: 1
+     * Order_ID 109 (Keyboard): Imputed Price = 1200.00
+
+5. EMAIL VALIDATION
+   - Total Invalid Email Records: 1
+   - Total Missing Email Records: 1
+     * Order_ID 104 (Customer: Unknown): Invalid Email = 'invalid-email'
+
+6. DATE CONVERSION & VALIDATION
+   - Standardized Order_Date from object string to datetime64[ns/us].
+   - Day-first interpretation enabled for DD/MM/YYYY and DD-MM-YYYY formats (e.g. 02/01/2026 -> 2026-01-02).
+   - ISO 8601 YYYY-MM-DD / YYYY/MM/DD formats properly supported.
+   - Safe parsing with errors='coerce' to prevent unhandled runtime exceptions.
+   - Invalid Date Records Detected: 0
+     * All date records parsed successfully.
+
+7. DATA TYPE STANDARDIZATION
+   Column Data Types Before and After Cleaning:
+   - Order_ID       : int64           -> int64
+   - Customer_Name  : str             -> str
+   - Email          : str             -> str
+   - Product        : str             -> str
+   - Quantity       : int64           -> int64
+   - Price          : float64         -> float64
+   - City           : str             -> str
+   - Order_Date     : str             -> datetime64[us]
+
+8. CLEANING OPERATIONS PERFORMED
+   1. Dataset Ingestion: Verified existence and loaded raw CSV data without mutation.
+   2. Missing Value Audit: Evaluated missingness across all features via isna() and isnull().
+   3. Duplicate Row Detection: Flagged exact duplicate rows and duplicate Order_IDs.
+   4. Deduplication: Removed duplicate Order_ID (Row 105), preserving first valid entry.
+   5. Missing Value Imputation: Handled Customer_Name, City, and Price by business rules.
+   6. Email Standardization: Trimmed whitespace, converted to lowercase, flagged invalid format.
+   7. Data Type Conversion: Coerced Order_ID and Quantity to int64, Price to float64, Order_Date to datetime.
+   8. Quality Verification: Cross-validated row counts, null distributions, and type signatures.
+   9. Export: Saved clean dataset to data/cleaned/sales_cleaned.csv.
+
+9. UNRESOLVED DATA QUALITY ISSUES (FOR FUTURE PHASES)
+   - Missing Email: 1 record (Order_ID 107, Suresh) has no email on file. In line with
+     business integrity rules, no synthetic email was fabricated. Retained as missing.
+   - Invalid Email: 1 record (Order_ID 104) has 'invalid-email'. Preserved for manual CRM correction.
+   - Negative Quantity: Order_ID 107 contains Quantity = -2. This represents a potential return,
+     credit note, or data entry error. Outlier/anomaly transformation is reserved for Phase 4.
+   - Inconsistent Text Casing: Casing variations exist in City ('chennai', 'MADURAI', 'CHENNAI')
+     and Product ('MOUSE', 'Mouse'). Text standardization belongs to Phase 4.
+
+================================================================================
+                           END OF CLEANING REPORT
+================================================================================
