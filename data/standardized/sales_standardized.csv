@@ -1,0 +1,10 @@
+order_id,customer_name,email,product,quantity,price,city,order_date
+101,Arun,arun@gmail.com,Laptop,1,45000.0,Chennai,2026-01-01
+102,Ravi,ravi@gmail.com,Mobile,2,15000.0,Chennai,2026-01-02
+103,Kumar,kumar@gmail.com,Keyboard,1,1200.0,Madurai,2026-01-03
+104,Unknown,invalid-email,Mouse,3,500.0,Trichy,2026-01-04
+105,Priya,priya@gmail.com,Laptop,1,45000.0,Madurai,2026-01-05
+107,Suresh,,Mobile,-2,15000.0,Trichy,2026-01-07
+108,Manoj,manoj@gmail.com,Mouse,2,500.0,Unknown,2026-01-08
+109,Divya,divya@gmail.com,Keyboard,1,1200.0,Chennai,2026-01-09
+110,Karthik,karthik@gmail.com,Laptop,1,45000.0,Coimbatore,2026-01-10

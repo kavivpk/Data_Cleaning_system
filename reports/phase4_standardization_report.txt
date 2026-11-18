@@ -1,0 +1,90 @@
+================================================================================
+                  DATA STANDARDIZATION REPORT - PHASE 4
+                Project: Data Cleaning and Preprocessing
+================================================================================
+
+1. DATASET OVERVIEW
+   - Input Dataset:   E:\Project\Data_Clearning_System\data\cleaned\sales_cleaned.csv
+   - Output Dataset:  E:\Project\Data_Clearning_System\data\standardized\sales_standardized.csv
+   - Total Rows:      9
+   - Total Columns:   8
+
+2. COLUMN NAME STANDARDIZATION (snake_case)
+   Original Column Name      ->  Standardized Column Name
+   -------------------------------------------------------
+   Order_ID                  ->  order_id
+   Customer_Name             ->  customer_name
+   Email                     ->  email
+   Product                   ->  product
+   Quantity                  ->  quantity
+   Price                     ->  price
+   City                      ->  city
+   Order_Date                ->  order_date
+
+3. TEXT VALUES STANDARDIZATION
+   - Total Text Values Altered: 3
+   - Column 'customer_name': 0 modification(s)
+   - Column 'city': 3 modification(s)
+     * Row 1: 'chennai' -> 'Chennai'
+     * Row 2: 'MADURAI' -> 'Madurai'
+     * Row 7: 'CHENNAI' -> 'Chennai'
+   - Column 'product': 0 modification(s)
+   - Column 'email': 0 modification(s)
+
+4. PRODUCT CATEGORIES STANDARDIZATION
+   - Expected Categories: Keyboard, Laptop, Mobile, Mouse
+   - Categories Found:    Keyboard, Laptop, Mobile, Mouse
+   - Mappings Applied:    1
+     * Row 6: 'MOUSE' -> 'Mouse'
+   - Unknown Categories Detected: 0
+     * None (all records match expected catalog categories).
+
+5. MISSING VALUE REPRESENTATION STANDARDIZATION
+   - Recognized Markers Checked: , -, empty, n/a, na, nan, nil, none, null, undefined
+   - Inconsistent Markers Replaced: 0
+   - Missing Values Count by Column (After Standardization):
+     * order_id          : 0
+     * customer_name     : 0
+     * email             : 1
+     * product           : 0
+     * quantity          : 0
+     * price             : 0
+     * city              : 0
+     * order_date        : 0
+
+6. DATE FORMAT STANDARDIZATION
+   - Column: 'order_date'
+   - Storage Dtype: datetime64
+   - Export Representation: YYYY-MM-DD
+   - Day-First Interpretation Preserved: True (e.g. 02/01/2026 -> 2026-01-02)
+   - Date Range: 2026-01-01 to 2026-01-10
+   - Invalid Date Entries: 0
+
+7. NUMERIC DATATYPES & INTEGRITY VALIDATION
+   - order_id: integer (int64)
+   - quantity: integer (int64)
+   - price:    float (float64) - preserved original precision without arbitrary rounding.
+   - Suspicious Values Identified: 1
+     * Column 'quantity' (Row 5): Value = -2 (Negative quantity (potential return or data entry anomaly))
+
+8. BEFORE-AND-AFTER COMPARISON SUMMARY
+   - Column Names:      Pascal/Mixed Case -> Consistent snake_case
+   - City Text:         Mixed casing ('chennai', 'MADURAI', 'CHENNAI') -> Uniform Title Case ('Chennai', 'Madurai')
+   - Product Text:      Mixed casing ('MOUSE', 'Mouse') -> Canonical Title Case ('Mouse')
+   - Email Format:      Trimmed, lowercased, valid emails retained, invalid preserved for audit.
+   - Dates:             Normalized to ISO YYYY-MM-DD format.
+   - Missing Values:    Legitimate placeholders ('Unknown') retained; nulls preserved consistently.
+
+9. REMAINING DATA QUALITY ISSUES (FOR FUTURE PHASES)
+   - Missing Email: 1 record (Order_ID 107, Suresh) has missing email. Preserved as NaN.
+   - Invalid Email: 1 record (Order_ID 104) has 'invalid-email'. Preserved for CRM verification.
+   - Negative Quantity: Order_ID 107 has quantity = -2. Preserved as raw business transaction
+     (return/cancellation). Feature engineering or outlier treatment is reserved for Phase 5.
+
+10. FINAL STANDARDIZATION STATUS
+   - Status: PASSED / COMPLETED
+   - All standardizations executed cleanly without modifying raw or Phase 3 datasets.
+
+================================================================================
+                         END OF STANDARDIZATION REPORT
+================================================================================
