@@ -1,0 +1,112 @@
+================================================================================
+          FINAL CONSOLIDATED PROJECT REPORT - DATA CLEANING & QA
+                   Project: Data Cleaning and Preprocessing
+================================================================================
+
+1. PROJECT OVERVIEW
+   - Project Name:     Data Cleaning and Preprocessing System
+   - Domain:           E-Commerce & Retail Sales Order Processing
+   - Technology Stack: Python 3.11, Pandas, openpyxl, unittest
+   - Input Raw File:   data/raw/sales_dirty.csv
+   - Output Final:     data/final/sales_final.csv & data/final/sales_final.xlsx
+   - Primary Report:   reports/final_data_quality_report.xlsx
+
+2. BUSINESS PROBLEM
+   Raw sales transactional records ingested from distributed operational systems
+   exhibited pervasive data hygiene issues: duplicate transaction identifiers,
+   missing customer names, unrecorded delivery cities, missing item pricing,
+   invalid email contact formats, negative order quantities, non-standard mixed
+   text casing ('chennai', 'MADURAI', 'MOUSE'), and inconsistent date string formats.
+   Unchecked, these flaws distort financial revenue summaries, bias regional marketing
+   benchmarks, and degrade customer communication workflows.
+
+3. PROJECT OBJECTIVES
+   a) Establish an automated, auditable, and reproducible 6-phase data preparation lifecycle.
+   b) Remediate structural missingness without fabricating synthetic contact data.
+   c) Eliminate entity duplication to protect transaction ledger integrity.
+   d) Harmonize text casing, date interpretations, and schema column headers.
+   e) Implement formal validation rules across completeness, uniqueness, validity, and consistency.
+   f) Produce transparent data quality scorecards and audit logs for executive review.
+
+4. DATASET DESCRIPTION
+   The sales transactions dataset tracks commercial orders across retail electronics:
+   - order_id:      Unique integer commercial transaction identifier (Primary Key)
+   - customer_name: Full name of the purchasing customer or 'Unknown' placeholder
+   - email:         Customer contact email address
+   - product:       Merchandise catalog item (Laptop, Mobile, Keyboard, Mouse)
+   - quantity:      Ordered units (or negative return transaction units)
+   - price:         Unit item price in Indian Rupees (INR)
+   - city:          Delivery destination in Tamil Nadu or 'Unknown' placeholder
+   - order_date:    Transaction completion date (ISO YYYY-MM-DD)
+
+5. TECHNOLOGY STACK
+   - Python 3.11: Core computational environment
+   - Pandas: High-performance tabular transformation and missingness handling
+   - openpyxl: Production-grade multi-tab formatted Excel reporting with freeze panes & auto-filters
+   - unittest: Comprehensive test-driven validation framework
+   - pathlib: Cross-platform POSIX and Windows filesystem management
+
+6. PHASE 2: DATA INSPECTION SUMMARY
+   - Initial Rows: 10 | Initial Columns: 8
+   - Missing Values Detected: 4 (Customer_Name: 1, Email: 1, Price: 1, City: 1)
+   - Duplicates Identified: 1 duplicate transaction (Order_ID 105, Priya, Laptop)
+   - Anomalies Found: 1 invalid email string ('invalid-email'), 1 negative quantity (-2 units)
+   - Date Formats: Mixed string notations ('2026-01-01', '02/01/2026', '04-01-2026')
+
+7. PHASE 3: DATA CLEANING SUMMARY
+   - Deduplication: Dropped redundant Order_ID 105; reduced record count from 10 to 9.
+   - Missing Value Imputation:
+     * Customer_Name: Imputed with 'Unknown' to retain order transaction financial value.
+     * City: Imputed with 'Unknown' to preserve ledger total without regional distortion.
+     * Price: Imputed Order 109 Keyboard price via category median (1,200.00 INR).
+     * Email: Preserved missing email as NaN without fabricating synthetic addresses.
+   - Date Conversion: Parsed mixed dates using day-first interpretation (02/01/2026 -> 2026-01-02).
+   - Cleaned Output: data/cleaned/sales_cleaned.csv
+
+8. PHASE 4: DATA STANDARDIZATION SUMMARY
+   - Column Renaming: Standardized all 8 column headers to uniform snake_case.
+   - Text Casing: Standardized city names ('chennai', 'MADURAI', 'CHENNAI' -> 'Chennai', 'Madurai').
+   - Category Normalization: Mapped uppercase 'MOUSE' to canonical catalog category 'Mouse'.
+   - Email Normalization: Stripped whitespace padding and normalized to lowercase.
+   - Standardized Output: data/standardized/sales_standardized.csv
+
+9. PHASE 5: DATA VALIDATION & QA SUMMARY
+   - Multi-Dimension Auditing: Evaluated completeness, uniqueness, validity, and consistency.
+   - Business Rules Evaluation: 5 Rules Passed, 1 Rule Warning (Quantity <= 0), 1 Rule Error (Invalid Email).
+   - Issue Export: Exported all 5 flagged operational records to data/validated/validation_issues.csv.
+
+10. FINAL DATASET INFORMATION
+   - Total Cleaned & Standardized Records: 9
+   - Total Features: 8
+   - Data Types: int64 (order_id, quantity), float64 (price), datetime64 (order_date), object/str (others)
+   - Files Exported: data/final/sales_final.csv and data/final/sales_final.xlsx
+
+11. DATA QUALITY SCORECARD
+   - Completeness Score:      98.61%  ((72 total cells - 1 missing cell) / 72 * 100)
+   - Uniqueness Score:       100.00%  (Zero duplicate rows, zero duplicate order_ids)
+   - Validity Score:          95.45%  ((44 validity checks - 2 violations) / 44 * 100)
+   - Consistency Score:      100.00%  (100% adherence across schema, casing, and datatypes)
+   -----------------------------------------------------------------------------
+   OVERALL DATA QUALITY SCORE: 98.52%  (Arithmetic mean of 4 quality dimensions)
+
+12. REMAINING OPERATIONAL LIMITATIONS & REMEDIATIONS
+   1. Order_ID 104 (Row 3): Invalid Email ('invalid-email')
+      - Action: Trigger customer support inquiry or CRM self-service update.
+   2. Order_ID 107 (Row 5): Missing Email (<MISSING>)
+      - Action: Enrich account profile via billing or courier phone contact.
+   3. Order_ID 107 (Row 5): Negative Quantity (-2)
+      - Action: Confirm as product return / credit note; process via return accounting.
+   4. Order_ID 104 (Row 3): Customer Name 'Unknown'
+      - Action: Reconcile with payment processor settlement statement.
+   5. Order_ID 108 (Row 6): City 'Unknown'
+      - Action: Cross-reference courier postal tracking record.
+
+13. FINAL CONCLUSION
+   The Data Cleaning and Preprocessing System has successfully transitioned a noisy,
+   unstructured raw transactional sales log into an enterprise-ready, standardized dataset
+   with an outstanding 98.52% Data Quality Score. All data modifications are auditable,
+   reproducible, and documented across granular reports and multi-sheet Excel workbooks.
+
+================================================================================
+                     END OF CONSOLIDATED PROJECT REPORT
+================================================================================
