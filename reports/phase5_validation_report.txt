@@ -1,0 +1,119 @@
+================================================================================
+             DATA VALIDATION & QUALITY ASSURANCE REPORT - PHASE 5
+                 Project: Data Cleaning and Preprocessing
+================================================================================
+
+1. DATASET OVERVIEW
+   - Input Dataset:            E:\Project\Data_Clearning_System\data\standardized\sales_standardized.csv
+   - Total Rows:               9
+   - Total Columns:            8
+   - Total Cells Evaluated:    72
+
+2. DATA QUALITY SCORES BY DIMENSION
+   a) Completeness Score:      98.61%
+      Formula: (total_cells - missing_cells) / total_cells * 100
+   b) Uniqueness Score:        100.00%
+      Formula: (1 - (duplicate_rows + duplicate_order_ids) / total_rows) * 100
+   c) Validity Score:          95.45%
+      Formula: (validity_checks - validity_violations) / validity_checks * 100
+   d) Consistency Score:       100.00%
+      Formula: passed_consistency_dimensions / total_consistency_dimensions * 100
+   -----------------------------------------------------------------------------
+   OVERALL DATA QUALITY SCORE: 98.52% (Arithmetic Mean of 4 Dimensions)
+
+   Score Methodology & Limitations Disclosure:
+   Quality scores measure syntactic conformity, relational uniqueness, and domain boundaries. A high score does NOT certify real-world semantic ground-truth accuracy (e.g. valid emails may belong to different customers, and catalog items may not match physical warehouse shipments).
+
+3. COMPLETENESS VALIDATION RESULTS
+   - Missing Cells Count:      1 of 72
+   - Column-by-Column Completeness Audit:
+     Column Name        Missing Count    Missing %    Status
+     -------------------------------------------------------
+     order_id           0                0.00         COMPLETE
+     customer_name      0                0.00         COMPLETE
+     email              1                11.11        INCOMPLETE
+     product            0                0.00         COMPLETE
+     quantity           0                0.00         COMPLETE
+     price              0                0.00         COMPLETE
+     city               0                0.00         COMPLETE
+     order_date         0                0.00         COMPLETE
+
+4. UNIQUENESS VALIDATION RESULTS
+   - Duplicate Complete Rows:  0 (PASS)
+   - Duplicate order_id:       0 (PASS)
+   - Repeated Customer Emails: 0
+   - Business Duplicate Analysis:
+     * Duplicate complete records or duplicate order_ids violate transactional integrity
+       and are classified as ERROR.
+     * Repeated customer emails across distinct order_ids reflect regular repeat buyer
+       behavior and are classified as business investigation WARNING, not system errors.
+
+5. VALIDITY VALIDATION RESULTS
+   a) Email Validation:
+      - Valid Email Syntax Count:    7 of 8
+      - Invalid Email Syntax Count:  1
+      - Missing Emails (Preserved):  1
+        * Row 3 (Order_ID 104): Invalid = 'invalid-email'
+   b) Order Date Validation:
+      - Expected Operational Window: 2026-01-01 to 2026-12-31
+      - Actual Date Range:           2026-01-01 to 2026-01-10
+      - Unparseable Dates:           0
+      - Dates Out of Range:          0
+   c) Numeric Columns Validation:
+      - Quantity: Valid Positive = 8, Negative = 1, Zero = 0
+      - Price:    Valid Positive = 9, Negative = 0, Range = 500.00 to 45000.00
+   d) Product Catalog & City Validation:
+      - Approved Categories:         Keyboard, Laptop, Mobile, Mouse
+      - Unexpected Products Found:   0
+      - Placeholder Cities Found:    1 ('Unknown' delivery tags)
+
+6. CONSISTENCY VALIDATION RESULTS
+   - Column Names Follow snake_case:            True
+   - Product Names Follow Consistent Title Case: True
+   - City Names Follow Consistent Title Case:    True
+   - Emails Normalized to Lowercase:             True
+   - Numeric Columns Datatypes Conformance:      True
+
+7. BUSINESS RULES VALIDATION SUMMARY
+   Rule Name                      Status    Violations   Description
+   ----------------------------------------------------------------------------
+   rule_1_order_id_unique         PASS      0            order_id must be unique across all records.
+   rule_2_quantity_positive       WARNING   1            quantity must be greater than zero (> 0).
+   rule_3_price_non_negative      PASS      0            price must be greater than or equal to zero (>= 0.00).
+   rule_4_product_in_catalog      PASS      0            product must belong to approved catalog: ['Keyboard', 'Laptop', 'Mobile', 'Mouse'].
+   rule_5_order_date_valid_range  PASS      0            order_date must be valid datetime within range (2026-01-01 to 2026-12-31).
+   rule_6_email_format_valid      ERROR     1            email must follow standard RFC email format when provided.
+   rule_7_customer_name_not_empty PASS      0            customer_name must not be empty or whitespace.
+
+8. PASS / WARNING / ERROR AUDIT COUNTS
+   - Business Rules Passing (PASS):   5 of 7
+   - Total Critical Errors (ERROR):   1
+   - Total Warnings / Flags (WARNING): 4
+   - Total Flagged Issues Logged:     5 (Exported to data/validated/validation_issues.csv)
+
+9. ISSUES REQUIRING BUSINESS INVESTIGATION
+   1. Order_ID 104 (Row 3): Invalid Email Syntax ('invalid-email')
+      - Impact: Marketing deliverability failure, bounce penalty.
+      - Action: Trigger CRM customer outreach to collect valid contact address.
+   2. Order_ID 107 (Row 5): Missing Email (<MISSING>)
+      - Impact: Incomplete customer profile.
+      - Action: Enrich account profile via billing or phone contact records.
+   3. Order_ID 107 (Row 5): Negative Quantity (-2)
+      - Impact: Negative unit count affects sales reporting and volume aggregates.
+      - Action: Confirm whether transaction represents a return, RMA, or clerk entry error.
+   4. Order_ID 104 (Row 3): Customer Name 'Unknown'
+      - Impact: Unrecorded buyer identity from Phase 3 imputation.
+      - Action: Reconcile with payment gateway / invoice logs.
+   5. Order_ID 108 (Row 6): City 'Unknown'
+      - Impact: Missing regional delivery metadata from Phase 3 imputation.
+      - Action: Cross-reference shipping carrier tracking record.
+
+10. FINAL VALIDATION & QA SUMMARY
+   - Dataset Overall Quality Score: 98.52%
+   - Status: VALIDATED WITH KNOWN OPERATIONAL EXCEPTIONS
+   - The dataset possesses high structural, relational, and format integrity.
+   - All 5 flagged exceptions are documented with explicit remediation recommendations.
+
+================================================================================
+                     END OF PHASE 5 VALIDATION REPORT
+================================================================================

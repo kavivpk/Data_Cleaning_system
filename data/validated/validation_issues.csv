@@ -1,0 +1,6 @@
+row_index,order_id,column_name,invalid_value,issue_type,severity,description
+5,107,email,<MISSING>,Missing Value,WARNING,Missing value (null/NaN) detected in column 'email'.
+3,104,email,invalid-email,Invalid Email Format,ERROR,Email address 'invalid-email' does not conform to RFC syntax (missing @ or valid domain).
+5,107,quantity,-2,Negative Quantity,WARNING,Quantity -2 is negative; indicates potential product return or entry error.
+6,108,city,Unknown,Placeholder Location,WARNING,City 'Unknown' is a placeholder; geographical delivery address is unrecorded.
+3,104,customer_name,Unknown,Placeholder Customer Name,WARNING,Customer name 'Unknown' is a placeholder; customer identity was unrecorded.
